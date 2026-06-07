@@ -8,31 +8,8 @@ import keyboard
 
 
 def main():
-    options = webdriver.ChromeOptions()
-    options.add_argument("--kiosk")
-    options.add_argument("--disable-features=FullscreenNotification")
-    options.add_experimental_option("excludeSwitches", ["enable-automation"])
-
-    # webdriver-manager sometimes resolves to a non-executable file in the
-    # extracted directory (e.g. THIRD_PARTY_NOTICES.chromedriver). Walk up to
-    # the containing folder and pick the plain "chromedriver" binary instead.
-    wdm_path = ChromeDriverManager().install()
-    chromedriver_path = os.path.join(os.path.dirname(wdm_path), "chromedriver")
-    if not os.path.isfile(chromedriver_path):
-        chromedriver_path = wdm_path  # fallback to whatever wdm returned
-
-    driver = webdriver.Chrome(
-        service=Service(chromedriver_path),
-        options=options,
-    )
-
-    driver.get("http://localhost:3000")
-
-    # Give the page a moment to fully render before recording starts
-    time.sleep(1)
-
     fps = 90
-    duration = 30  # seconds
+    duration = 120  # seconds
     display = os.environ.get("DISPLAY", ":0")
     output_path = os.path.join("videos", f"recording_{int(time.time())}.mp4")
 
@@ -64,8 +41,6 @@ def main():
     # Send 'q' to stdin — the proper ffmpeg quit signal that finalizes the file
     ffmpeg_proc.communicate(input=b"q")
     ffmpeg_proc.wait()
-
-    driver.quit()
 
     print(f"Recording saved to {output_path}")
 
