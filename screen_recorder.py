@@ -5,7 +5,7 @@ import time
 
 def main():
     fps = 90
-    duration = 120  # seconds
+    duration = 720  # seconds
     display = os.environ.get("DISPLAY", ":0")
     output_path = os.path.join("videos", f"recording_{int(time.time())}.mp4")
 
